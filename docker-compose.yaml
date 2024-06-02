@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  databases:
+    image: postgres:16.3
+    environment:
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: hotel_booking
+    ports:
+      - "1453:1453"
