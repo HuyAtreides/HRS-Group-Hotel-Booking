@@ -1,7 +1,7 @@
 FROM openjdk:17-jdk-oracle
 
-WORKDIR /usr/9gag/back-end
+WORKDIR /usr/hrs
 
-COPY ./target/9gag-0.0.1-SNAPSHOT.jar ./
+COPY ./target/hotelbooking-0.0.1-SNAPSHOT.jar ./
 
-CMD java -Dspring.profiles.active=dev1 -jar /usr/9gag/back-end/9gag-0.0.1-SNAPSHOT.jar
+CMD java -Dspring.profiles.active=prod -jar /usr/hrs/hotelbooking-0.0.1-SNAPSHOT.jar

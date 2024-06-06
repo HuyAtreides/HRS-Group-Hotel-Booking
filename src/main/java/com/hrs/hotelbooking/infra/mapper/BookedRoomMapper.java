@@ -12,6 +12,7 @@ public class BookedRoomMapper implements ToDtoMapper<BookedRoom, BookedRoomDto> 
     @Override
     public BookedRoomDto mapToDto(BookedRoom model) {
         return BookedRoomDto.builder()
+                .id(model.getId())
                 .quantity(model.getQuantity())
                 .room(roomMapper.mapToDto(model.getRoom()))
                 .build();

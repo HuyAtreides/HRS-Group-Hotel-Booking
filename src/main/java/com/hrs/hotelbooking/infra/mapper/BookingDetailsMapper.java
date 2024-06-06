@@ -21,6 +21,7 @@ public class BookingDetailsMapper implements ToDtoMapper<BookingDetails, Booking
                 .checkInDate(model.getCheckInDate().toString())
                 .checkOutDate(model.getCheckOutDate().toString())
                 .totalPrice(model.getTotalPrice())
+                .lastModifiedAt(model.getLastModifiedAt().toString())
                 .hotel(hotelMapper.mapToDto(model.getHotel()))
                 .bookedRooms(model.getBookedRooms()
                         .stream().map(bookedRoomMapper::mapToDto)

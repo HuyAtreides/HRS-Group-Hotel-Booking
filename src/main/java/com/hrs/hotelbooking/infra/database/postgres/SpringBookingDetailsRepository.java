@@ -17,7 +17,7 @@ public interface SpringBookingDetailsRepository extends CrudRepository<BookingDe
                     bookingDetails.checkInDate <= :checkOutDate 
                     and :checkInDate <= bookingDetails.checkOutDate
                   )
-                  and bookedRoom.id in :roomIds
+                  and bookedRoom.room.id in :roomIds
             """)
     Set<BookingDetails> findAllOverlappingBookings(
             @Param("checkInDate") LocalDate checkInDate,

@@ -58,7 +58,7 @@ public class HotelService {
 
         BookingRequest bookingRequest = BookingRequest.builder()
                 .bookedAt(currentDateTimeService.getCurrentDateTime())
-                .location(hotel.findLocationById(bookHotelCommand.getHotelId()))
+                .location(hotel.findLocationById(bookHotelCommand.getLocationId()))
                 .checkInDate(bookHotelCommand.getCheckInDate())
                 .checkOutDate(bookHotelCommand.getCheckOutDate())
                 .rooms(bookHotelCommand.getRooms().stream().map(

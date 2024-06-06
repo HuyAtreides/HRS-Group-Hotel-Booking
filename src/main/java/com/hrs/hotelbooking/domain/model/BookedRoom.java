@@ -42,6 +42,10 @@ public class BookedRoom {
             throw new IllegalArgumentException("Booked quantity can not greater than room availability");
         }
 
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity should be larger than 0");
+        }
+
         this.id = id;
         this.quantity = quantity;
         this.bookingDetails = bookingDetails;

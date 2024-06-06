@@ -85,16 +85,16 @@ public class Hotel {
                     continue;
                 }
 
-                int bookingRoomAvailability = bookingRoomIdToAvailabilityMap.get(bookedRoomId);
+                int bookingRoomAvailability = bookingRoomIdToAvailabilityMap.get(bookedRoomId) - bookedRoomQuantity;
                 int bookingRoomQuantity = bookingRoomIdToQuantityMap.get(bookedRoomId);
 
-                if (bookingRoomQuantity >= bookingRoomAvailability) {
+                if (bookingRoomQuantity > bookingRoomAvailability) {
                     return false;
                 }
 
                 bookingRoomIdToAvailabilityMap.put(
                         bookedRoomId,
-                        bookingRoomAvailability - bookedRoomQuantity
+                        bookingRoomAvailability
                 );
             }
         }
@@ -156,6 +156,7 @@ public class Hotel {
                 .totalPrice(totalPrice)
                 .bookedRooms(bookingRooms)
                 .bookedAt(request.getBookedAt())
+                .lastModifiedAt(request.getBookedAt())
                 .hotel(this)
                 .owner(request.getUser())
                 .build();

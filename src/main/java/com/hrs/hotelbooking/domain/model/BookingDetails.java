@@ -1,6 +1,7 @@
 package com.hrs.hotelbooking.domain.model;
 
 import com.hrs.hotelbooking.domain.exception.InvalidBooking;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,7 +50,7 @@ public class BookingDetails {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @OneToMany(mappedBy = "bookingDetails")
+    @OneToMany(mappedBy = "bookingDetails", cascade = CascadeType.PERSIST)
     private Set<BookedRoom> bookedRooms;
 
     @OneToOne
@@ -67,6 +68,14 @@ public class BookingDetails {
 
         if (checkInDate.isAfter(checkOutDate)) {
             throw new InvalidBooking("Check in date is after check out date");
+        }
+
+        if (checkInDate.equals(checkOutDate)) {
+            throw new InvalidBooking("Check in date can not equal check out date");
+        }
+
+        if (bookedRooms.isEmpty()) {
+            throw new InvalidBooking("Booked rooms list is empty");
         }
 
         this.id = id;

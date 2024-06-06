@@ -1,9 +1,16 @@
 version: '3.9'
 services:
-  databases:
+  back-end:
+    image: huyphangia/hotel-booking-service:latest
+    restart: on-failure
+    depends_on:
+      - database
+    ports:
+      - "8080:8080"
+  database:
     image: postgres:16.3
     environment:
       POSTGRES_PASSWORD: postgres_password
       POSTGRES_DB: hotel_booking
     ports:
-      - "1453:1453"
+      - "1453:5432"
