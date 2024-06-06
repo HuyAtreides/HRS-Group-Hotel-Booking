@@ -1,10 +1,12 @@
 INSERT INTO "user" (
+  id,
 	first_name,
 	last_name,
 	email,
 	created_at,
 	modified_at
 ) VALUES (
+  'd5ba2bf3-cb3b-41aa-8a5c-6c20b0da6aa9',
 	'Phan Gia',
 	'Huy',
 	'phangiahuy@gmail.com',
@@ -13,12 +15,14 @@ INSERT INTO "user" (
 );
 
 INSERT INTO "user" (
+  id,
 	first_name,
 	last_name,
 	email,
 	created_at,
 	modified_at
 ) VALUES (
+  '25d31a88-17ed-44cf-aee3-7701e0c4e5d4',
 	'Dinh',
 	'Nghia',
 	'Dinh.Nghia@hrs.com',
@@ -72,6 +76,7 @@ INSERT INTO location (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -79,6 +84,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  'b0e940b7-c937-42ae-9417-816dbe0394a5',
 	'52920a66-f256-4e6a-8097-b84f19c4f490',
 	5,
 	141.70989,
@@ -88,6 +94,7 @@ INSERT INTO room (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -95,6 +102,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  '9ed11b12-992f-45aa-b223-195c9b752e14',
 	'52920a66-f256-4e6a-8097-b84f19c4f490',
 	9,
 	265.91057,
@@ -148,6 +156,7 @@ INSERT INTO location (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -155,6 +164,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  'b83d6be4-f9c0-49e5-abbd-35bc4d038ca5',
 	'14b52149-3c09-4d28-b3f7-da8490b2069f',
 	9,
 	189.27515,
@@ -164,6 +174,7 @@ INSERT INTO room (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -171,6 +182,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  '2b7ea54d-bb3e-421f-9b1a-6f1cf243281c',
 	'14b52149-3c09-4d28-b3f7-da8490b2069f',
 	7,
 	289.97119,
@@ -224,6 +236,7 @@ INSERT INTO location (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -231,6 +244,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  'ba8fa6f2-2999-49a1-afc1-23ebdb8c1b8f',
 	'76b0f0b2-20ec-4ac6-8a51-d9b8515f5d44',
 	2,
 	373.73183,
@@ -240,6 +254,7 @@ INSERT INTO room (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -247,6 +262,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  'b53c2218-19d3-4bc8-90f1-7b32ac10d6c7',
 	'76b0f0b2-20ec-4ac6-8a51-d9b8515f5d44',
 	5,
 	271.00281,
@@ -299,6 +315,7 @@ INSERT INTO location (
 
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -306,6 +323,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  '31e91fa5-b79c-4e73-95eb-1052e7c31058',
 	'9f5cbf4c-4f34-4ab6-a219-80e7c36ae0c1',
 	9,
 	150.71939,
@@ -315,6 +333,7 @@ INSERT INTO room (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -322,6 +341,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  'f64d5fb7-4621-43b0-863f-09db368d7d26',
 	'9f5cbf4c-4f34-4ab6-a219-80e7c36ae0c1',
 	2,
 	107.21254,
@@ -376,6 +396,7 @@ INSERT INTO location (
 
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -383,6 +404,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  '4021f9a6-74df-4435-8544-a495e9bcd795',
 	'11d54a1d-8ab9-4e0f-8e5c-80f914b8cce5',
 	7,
 	39.529561,
@@ -392,6 +414,7 @@ INSERT INTO room (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -399,6 +422,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  '1b459233-f046-4a5a-9f89-ace7980fe19b',
 	'11d54a1d-8ab9-4e0f-8e5c-80f914b8cce5',
 	6,
 	82.716571,
@@ -450,6 +474,7 @@ INSERT INTO location (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -457,6 +482,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  '67a2e8b4-8466-49ea-8e93-7529bbd32ef6',
 	'aa26243c-c368-49a6-b1fc-fab242c26478',
 	2,
 	68.585,
@@ -510,6 +536,7 @@ INSERT INTO location (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -517,6 +544,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  'd8feab8e-e4a1-497b-9ab4-adc5a7ff1f96',
 	'9d9a8bae-3735-4747-b841-56ddb79a1479',
 	8,
 	121.70857,
@@ -526,6 +554,7 @@ INSERT INTO room (
 );
 
 INSERT INTO room (
+  id,
 	location_id ,
 	availability ,
 	price,
@@ -533,6 +562,7 @@ INSERT INTO room (
 	number_of_guests,
 	type
 ) VALUES (
+  '311a5848-895d-4cd0-9a57-74395e5b90d2',
 	'9d9a8bae-3735-4747-b841-56ddb79a1479',
 	2,
 	235.17266,

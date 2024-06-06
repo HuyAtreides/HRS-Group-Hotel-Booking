@@ -40,18 +40,19 @@ CREATE TABLE room (
 
 CREATE TABLE booking_details (
 	id UUID PRIMARY KEY,
-	check_in_date TIMESTAMP NOT NULL,
-	check_out_date TIMESTAMP NOT NULL,
+	check_in_date DATE NOT NULL,
+	check_out_date DATE NOT NULL,
 	hotel_id UUID REFERENCES hotel (id),
 	total_price NUMERIC(12, 2) NOT NULL
 );
 
 CREATE TABLE booked_room (
+  id UUID PRIMARY KEY,
 	booking_details_id UUID REFERENCES booking_details (id),
 	quantity INT NOT NULL,
 	price NUMERIC(12, 2) NOT NULL,
 	room_id UUID REFERENCES room (id),
-	PRIMARY KEY (booking_details_id, room_id)
+	UNIQUE (booking_details_id, room_id)
 );
 
 
