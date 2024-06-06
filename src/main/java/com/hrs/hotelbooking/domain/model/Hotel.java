@@ -115,10 +115,10 @@ public class Hotel {
     }
 
     private void validateBookingRoomsAvailability(
-            BookingRequest request,
+            Set<BookedRoom> bookingRooms,
             Set<BookingDetails> overlappingBooking
     ) {
-        if (!areAllBookingRoomsQuantityCanBeSatisfied(request.getRooms(), overlappingBooking)) {
+        if (!areAllBookingRoomsQuantityCanBeSatisfied(bookingRooms, overlappingBooking)) {
             throw new InvalidBooking("One of the booking rooms quantity can not be satisfied");
         }
     }
@@ -140,7 +140,7 @@ public class Hotel {
     public BookingDetails book(BookingRequest request, Set<BookingDetails> overlappingBooking) {
         Set<BookedRoom> bookingRooms = request.getRooms();
         validateBookingRoomsBelongToHotelLocation(bookingRooms, request.getLocation());
-        validateBookingRoomsAvailability(request, overlappingBooking);
+        validateBookingRoomsAvailability(request.getRooms() , overlappingBooking);
 
         BigDecimal totalPrice = calculateTotalPrice(request);
 

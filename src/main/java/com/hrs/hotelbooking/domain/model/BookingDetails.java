@@ -15,11 +15,9 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Set;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Entity
 @Getter
