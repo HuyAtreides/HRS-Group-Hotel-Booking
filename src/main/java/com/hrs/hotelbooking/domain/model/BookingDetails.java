@@ -56,7 +56,8 @@ public class BookingDetails {
     @JoinColumn(name = "user_id")
     private User owner;
 
-    public BookingDetails(UUID id, LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalPrice,
+    public BookingDetails(UUID id, LocalDate checkInDate, LocalDate checkOutDate,
+            BigDecimal totalPrice,
             Instant bookedAt, Instant lastModifiedAt, Hotel hotel, Set<BookedRoom> bookedRooms,
             User owner
     ) {
@@ -77,5 +78,7 @@ public class BookingDetails {
         this.hotel = hotel;
         this.bookedRooms = bookedRooms;
         this.owner = owner;
+
+        bookedRooms.forEach(bookedRoom -> bookedRoom.associateWithBookingDetails(this));
     }
 }

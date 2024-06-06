@@ -1,6 +1,9 @@
 package com.hrs.hotelbooking.infra.database.postgres;
 
 import com.hrs.hotelbooking.domain.model.Hotel;
+import com.hrs.hotelbooking.domain.model.Room;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

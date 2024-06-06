@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
@@ -44,6 +43,13 @@ public class Hotel {
 
     @OneToMany(mappedBy = "hotel")
     private Set<Location> locations;
+
+    public Location findLocationById(UUID id) {
+        return locations.stream()
+                .filter(location -> location.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Location ID doesn't exist"));
+    }
 
     private Set<Room> getRoomsInLocation(Location bookingLocation) {
         return locations.stream()
@@ -114,7 +120,7 @@ public class Hotel {
         );
     }
 
-    private void validateBookingRoomsAvailability(
+    private void validateBookingRoomsQuantity(
             Set<BookedRoom> bookingRooms,
             Set<BookingDetails> overlappingBooking
     ) {
@@ -140,7 +146,7 @@ public class Hotel {
     public BookingDetails book(BookingRequest request, Set<BookingDetails> overlappingBooking) {
         Set<BookedRoom> bookingRooms = request.getRooms();
         validateBookingRoomsBelongToHotelLocation(bookingRooms, request.getLocation());
-        validateBookingRoomsAvailability(request.getRooms() , overlappingBooking);
+        validateBookingRoomsQuantity(bookingRooms , overlappingBooking);
 
         BigDecimal totalPrice = calculateTotalPrice(request);
 

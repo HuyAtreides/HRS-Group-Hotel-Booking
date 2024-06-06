@@ -47,4 +47,8 @@ public class BookedRoom {
         this.bookingDetails = bookingDetails;
         this.room = room;
     }
+
+    public void associateWithBookingDetails(BookingDetails bookingDetails) {
+        this.bookingDetails = bookingDetails;
+    }
 }
