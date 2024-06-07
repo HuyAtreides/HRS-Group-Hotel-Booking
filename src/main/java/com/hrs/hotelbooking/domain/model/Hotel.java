@@ -1,6 +1,7 @@
 package com.hrs.hotelbooking.domain.model;
 
 import com.hrs.hotelbooking.domain.exception.InvalidBooking;
+import com.hrs.hotelbooking.domain.exception.InvalidBookingModification;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -141,6 +142,17 @@ public class Hotel {
         if (!allBookingRoomsInHotelRooms) {
             throw new InvalidBooking("One of the booking rooms is not in hotel");
         }
+    }
+
+    public void modifyBooking(
+            BookingModificationRequest bookingModificationRequest,
+            Set<BookingDetails> overlappingBooking
+    ) {
+        BookingDetails existingBooking = bookingModificationRequest.getBookingDetails();
+
+        validateBookingRoomsQuantity(existingBooking.getBookedRooms() , overlappingBooking);
+        existingBooking.validateIfEligibleForModification(bookingModificationRequest);
+        existingBooking.applyModification(bookingModificationRequest);
     }
 
     public BookingDetails book(BookingRequest request, Set<BookingDetails> overlappingBooking) {

@@ -13,9 +13,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleException(Exception invalidBooking) {
+    public ApiError handleException(Exception exception) {
         return ApiError.builder()
-                .errorMessage(invalidBooking.getMessage())
+                .errorMessage(exception.getMessage())
                 .build();
     }
 }
