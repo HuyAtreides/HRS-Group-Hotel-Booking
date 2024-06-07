@@ -2,12 +2,14 @@ package com.hrs.hotelbooking.application;
 
 import com.hrs.hotelbooking.application.command.BookHotelCommand;
 import com.hrs.hotelbooking.application.command.BookRoomCommand;
+import com.hrs.hotelbooking.application.command.BookingModificationCommand;
 import com.hrs.hotelbooking.application.query.SearchHotelQuery;
 import com.hrs.hotelbooking.application.repository.BookingDetailsRepository;
 import com.hrs.hotelbooking.application.repository.HotelRepository;
 import com.hrs.hotelbooking.application.repository.RoomRepository;
 import com.hrs.hotelbooking.domain.model.BookedRoom;
 import com.hrs.hotelbooking.domain.model.BookingDetails;
+import com.hrs.hotelbooking.domain.model.BookingModificationRequest;
 import com.hrs.hotelbooking.domain.model.BookingRequest;
 import com.hrs.hotelbooking.domain.model.Hotel;
 import com.hrs.hotelbooking.domain.model.Room;
@@ -37,11 +39,38 @@ public class HotelService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void modifyBooking(BookingModificationCommand command) {
+        User user = authenticatedUserHolderService.getAuthenticatedUser();
+        log.info("message=modify booking, method=bookHotel, modificationInfo={}, user={}",
+                command,
+                user.getEmail()
+        );
+
+        BookingDetails modifyingBooking = bookingDetailsRepository.findById(
+                command.getExistingBookingId());
+        Hotel hotel = modifyingBooking.getHotel();
+        Set<BookingDetails> overlappingBookingDetails = bookingDetailsRepository.findAllOverlappingBookings(
+                command
+        );
+
+        hotel.modifyBooking(
+                BookingModificationRequest.builder()
+                        .bookingDetails(modifyingBooking)
+                        .modifier(user)
+                        .newCheckInDate(command.getNewCheckInDate())
+                        .newCheckOutDate(command.getNewCheckOutDate())
+                        .modifiedAt(currentDateTimeService.getCurrentDateTime())
+                        .build(),
+                overlappingBookingDetails
+        );
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public BookingDetails bookHotel(BookHotelCommand bookHotelCommand) {
         User user = authenticatedUserHolderService.getAuthenticatedUser();
         log.info("message=book hotel, method=bookHotel, bookingInfo={}, user={}",
                 bookHotelCommand,
-                user
+                user.getEmail()
         );
 
         Hotel hotel = hotelRepository.findById(bookHotelCommand.getHotelId());

@@ -24,4 +24,21 @@ public interface SpringBookingDetailsRepository extends CrudRepository<BookingDe
             @Param("checkOutDate") LocalDate checkOutDate,
             @Param("roomIds") Set<UUID> roomIds
     );
+
+    @Query("""
+            select bookingDetails
+            from BookingDetails bookingDetails inner join bookingDetails.bookedRooms bookedRoom
+            where (
+                    bookingDetails.checkInDate <= :checkOutDate 
+                    and :checkInDate <= bookingDetails.checkOutDate
+                  )
+                  and bookingDetails.id <> :existingBookingId
+                  and bookedRoom.room.id in :roomIds
+            """)
+    Set<BookingDetails> findAllOverlappingBookings(
+            @Param("existingBookingId") UUID existingBookingId,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate,
+            @Param("roomIds") Set<UUID> roomIds
+    );
 }

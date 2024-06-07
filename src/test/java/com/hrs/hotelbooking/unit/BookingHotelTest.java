@@ -58,18 +58,21 @@ public class BookingHotelTest {
     private final LocalDate CHECK_OUT_DATE = LocalDate.parse("2024-03-24");
 
     BookingDetails bookRoom(LocalDate checkIn, LocalDate checkOut, Room room, int quantity) {
-        return BookingDetails.builder()
-                .checkInDate(checkIn)
-                .checkOutDate(checkOut)
-                .bookedAt(BOOKED_AT)
-                .bookedRooms(Set.of(
-                        BookedRoom.builder()
-                                .quantity(quantity)
-                                .room(room)
-                                .build()
-                ))
-                .hotel(TEST_HOTEL)
-                .build();
+        return TEST_HOTEL.book(
+                BookingRequest.builder()
+                        .rooms(Set.of(
+                                BookedRoom.builder()
+                                        .room(room)
+                                        .quantity(quantity)
+                                        .build()
+                        ))
+                        .location(TEST_LOCATION)
+                        .bookedAt(BOOKED_AT)
+                        .checkInDate(checkIn)
+                        .checkOutDate(checkOut)
+                        .build(),
+                Set.of()
+        );
     }
 
     @Test
@@ -170,10 +173,8 @@ public class BookingHotelTest {
         );
         assertAll("Correct Booking Details",
                 () -> assertEquals(bookingDetails.getBookedAt(), BOOKED_AT),
-                () -> assertTrue(
-                        BigDecimal.valueOf(303)
-                                    .compareTo( bookingDetails.getTotalPrice()) == 0
-                ),
+                () -> assertEquals(0, BigDecimal.valueOf(303)
+                        .compareTo(bookingDetails.getTotalPrice())),
                 () -> assertTrue(bookingDetails.getBookedRooms().containsAll(bookingRooms)),
                 () -> assertEquals(TEST_HOTEL, bookingDetails.getHotel())
         );

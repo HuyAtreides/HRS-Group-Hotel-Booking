@@ -1,6 +1,7 @@
 package com.hrs.hotelbooking.domain.model;
 
 import com.hrs.hotelbooking.domain.exception.InvalidBooking;
+import com.hrs.hotelbooking.domain.exception.InvalidBookingModification;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,16 +15,19 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Builder
+@Slf4j
 public class BookingDetails {
 
     @Id
@@ -58,7 +62,7 @@ public class BookingDetails {
     private User owner;
 
     public BookingDetails(UUID id, LocalDate checkInDate, LocalDate checkOutDate,
-            BigDecimal totalPrice,
+            BigDecimal ignoredTotalPrice,
             Instant bookedAt, Instant lastModifiedAt, Hotel hotel, Set<BookedRoom> bookedRooms,
             User owner
     ) {
@@ -66,13 +70,7 @@ public class BookingDetails {
             throw new InvalidBooking("Check in date in the past");
         }
 
-        if (checkInDate.isAfter(checkOutDate)) {
-            throw new InvalidBooking("Check in date is after check out date");
-        }
-
-        if (checkInDate.equals(checkOutDate)) {
-            throw new InvalidBooking("Check in date can not equal check out date");
-        }
+        validateCheckInCheckOutDate(checkInDate, checkOutDate);
 
         if (bookedRooms.isEmpty()) {
             throw new InvalidBooking("Booked rooms list is empty");
@@ -81,13 +79,90 @@ public class BookingDetails {
         this.id = id;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.totalPrice = totalPrice;
         this.bookedAt = bookedAt;
         this.lastModifiedAt = lastModifiedAt;
         this.hotel = hotel;
         this.bookedRooms = bookedRooms;
         this.owner = owner;
+        this.totalPrice = calculateTotalPrice();
 
         bookedRooms.forEach(bookedRoom -> bookedRoom.associateWithBookingDetails(this));
+    }
+
+    private void validateCheckInCheckOutDate(LocalDate checkInDate, LocalDate checkOutDate) {
+        if (checkInDate.isAfter(checkOutDate)) {
+            throw new InvalidBooking("Check in date is after check out date");
+        }
+
+        if (checkInDate.equals(checkOutDate)) {
+            throw new InvalidBooking("Check in date can not equal check out date");
+        }
+    }
+
+    private boolean isOwnedBy(User user) {
+        return owner.equals(user);
+    }
+
+    public void validateIfEligibleForModification(BookingModificationRequest request) {
+        User modifier = request.getModifier();
+        LocalDate newCheckInDate = request.getNewCheckInDate();
+        LocalDate newCheckOutDate = request.getNewCheckOutDate();
+        LocalDate modificationDate = LocalDate.ofInstant(request.getModifiedAt(), ZoneOffset.UTC);
+        LocalDate bookedAtDate = LocalDate.ofInstant(bookedAt, ZoneOffset.UTC);
+
+        if (!this.isOwnedBy(modifier)) {
+            throw new InvalidBookingModification("Modifier is not the booking owner");
+        }
+
+        if (modificationDate.isAfter(this.checkInDate) || modificationDate.equals(
+                this.checkInDate)) {
+            throw new InvalidBookingModification("Modification can not be after check in date");
+        }
+
+        if (ChronoUnit.DAYS.between(bookedAtDate, modificationDate) > 2) {
+            throw new InvalidBookingModification(
+                    "Can only modify within at most 2 days after booked date"
+            );
+        }
+
+        boolean stayingPeriodUnchanged =
+                newCheckInDate != null && newCheckInDate.equals(this.checkInDate) &&
+                        newCheckOutDate != null && newCheckOutDate.equals(this.checkOutDate);
+
+        if (stayingPeriodUnchanged) {
+            throw new InvalidBookingModification("Nothing changed");
+        }
+    }
+
+    public void modify(BookingModificationRequest request) {
+        LocalDate newCheckInDate = request.getNewCheckInDate();
+        LocalDate newCheckOutDate = request.getNewCheckOutDate();
+
+        if (newCheckInDate != null) {
+            this.checkInDate = newCheckInDate;
+        }
+
+        if (newCheckOutDate != null) {
+            this.checkOutDate = newCheckOutDate;
+        }
+
+        validateCheckInCheckOutDate(this.checkInDate, this.checkOutDate);
+        this.totalPrice = calculateTotalPrice();
+        this.lastModifiedAt = request.getModifiedAt();
+    }
+
+    private BigDecimal calculateTotalPrice() {
+        BigDecimal days = BigDecimal.valueOf(ChronoUnit.DAYS.between(checkInDate, checkOutDate));
+
+        return bookedRooms.stream().reduce(
+                BigDecimal.ZERO,
+                (subtotal, bookingRoom) -> {
+                    BigDecimal roomPriceInDays = bookingRoom.getRoom().getPrice().multiply(days);
+                    BigDecimal numberOfRooms = BigDecimal.valueOf(bookingRoom.getQuantity());
+
+                    return subtotal.add(roomPriceInDays.multiply(numberOfRooms));
+                },
+                BigDecimal::add
+        );
     }
 }
