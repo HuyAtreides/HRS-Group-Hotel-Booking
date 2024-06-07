@@ -30,33 +30,8 @@ public class BookingHotelIntegrationTest {
     @Autowired
     private HotelService hotelService;
 
-    @MockBean
-    private CurrentDateTimeService currentDateTimeService;
-
-    @MockBean
-    private AuthenticatedUserHolderService  authenticatedUserHolderService;
-
     @Autowired
     private SpringBookingDetailsRepository bookingDetailsRepository;
-
-    @BeforeEach
-    public void mockCurrentDateTimeService() {
-        Instant mockedDateTime = Instant.parse("2024-03-10T00:00:00Z");
-        when(currentDateTimeService.getCurrentDateTime())
-                .thenReturn(mockedDateTime);
-    }
-
-    @BeforeEach
-    public void mockAuthenticatedUserService() {
-        User mockedUser = User.builder()
-                .id(UUID.fromString("d5ba2bf3-cb3b-41aa-8a5c-6c20b0da6aa9"))
-                .email("phangiahuy2001@gmail.com")
-                .firstName("Phan")
-                .lastName("Huy")
-                .build();
-        when(authenticatedUserHolderService.getAuthenticatedUser())
-                .thenReturn(mockedUser);
-    }
 
     @Test
     void book_hotel_with_valid_info_then_there_should_be_a_booking_details_in_database() {

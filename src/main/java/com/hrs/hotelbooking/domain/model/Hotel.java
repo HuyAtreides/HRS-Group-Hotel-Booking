@@ -1,7 +1,6 @@
 package com.hrs.hotelbooking.domain.model;
 
 import com.hrs.hotelbooking.domain.exception.InvalidBooking;
-import com.hrs.hotelbooking.domain.exception.InvalidBookingModification;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -103,24 +102,6 @@ public class Hotel {
         return true;
     }
 
-    private BigDecimal calculateTotalPrice(BookingRequest request) {
-        Set<BookedRoom> bookingRooms = request.getRooms();
-        LocalDate checkInDate = request.getCheckInDate();
-        LocalDate checkOutDate = request.getCheckOutDate();
-        BigDecimal days = BigDecimal.valueOf(ChronoUnit.DAYS.between(checkInDate, checkOutDate));
-
-        return bookingRooms.stream().reduce(
-                BigDecimal.ZERO,
-                (subtotal, bookingRoom) -> {
-                    BigDecimal roomPriceInDays = bookingRoom.getRoom().getPrice().multiply(days);
-                    BigDecimal numberOfRooms = BigDecimal.valueOf(bookingRoom.getQuantity());
-
-                    return subtotal.add(roomPriceInDays.multiply(numberOfRooms));
-                },
-                BigDecimal::add
-        );
-    }
-
     private void validateBookingRoomsQuantity(
             Set<BookedRoom> bookingRooms,
             Set<BookingDetails> overlappingBooking
@@ -149,10 +130,10 @@ public class Hotel {
             Set<BookingDetails> overlappingBooking
     ) {
         BookingDetails existingBooking = bookingModificationRequest.getBookingDetails();
+        existingBooking.validateIfEligibleForModification(bookingModificationRequest);
 
         validateBookingRoomsQuantity(existingBooking.getBookedRooms() , overlappingBooking);
-        existingBooking.validateIfEligibleForModification(bookingModificationRequest);
-        existingBooking.applyModification(bookingModificationRequest);
+        existingBooking.modify(bookingModificationRequest);
     }
 
     public BookingDetails book(BookingRequest request, Set<BookingDetails> overlappingBooking) {
@@ -160,12 +141,9 @@ public class Hotel {
         validateBookingRoomsBelongToHotelLocation(bookingRooms, request.getLocation());
         validateBookingRoomsQuantity(bookingRooms , overlappingBooking);
 
-        BigDecimal totalPrice = calculateTotalPrice(request);
-
         return BookingDetails.builder()
                 .checkInDate(request.getCheckInDate())
                 .checkOutDate(request.getCheckOutDate())
-                .totalPrice(totalPrice)
                 .bookedRooms(bookingRooms)
                 .bookedAt(request.getBookedAt())
                 .lastModifiedAt(request.getBookedAt())

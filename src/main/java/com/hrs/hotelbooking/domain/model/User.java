@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
@@ -23,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class User implements UserDetails {
 
     @Id
@@ -31,15 +33,12 @@ public class User implements UserDetails {
     private UUID id;
 
     @Column(name = "first_name")
-    @NonNull
     private String firstName;
 
     @Column(name = "last_name")
-    @NonNull
     private String lastName;
 
     @Column(name = "email")
-    @NonNull
     private String email;
 
     @Override

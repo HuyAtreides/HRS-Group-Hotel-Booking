@@ -43,7 +43,7 @@ public class HotelService {
         User user = authenticatedUserHolderService.getAuthenticatedUser();
         log.info("message=modify booking, method=bookHotel, modificationInfo={}, user={}",
                 command,
-                user
+                user.getEmail()
         );
 
         BookingDetails modifyingBooking = bookingDetailsRepository.findById(
@@ -70,7 +70,7 @@ public class HotelService {
         User user = authenticatedUserHolderService.getAuthenticatedUser();
         log.info("message=book hotel, method=bookHotel, bookingInfo={}, user={}",
                 bookHotelCommand,
-                user
+                user.getEmail()
         );
 
         Hotel hotel = hotelRepository.findById(bookHotelCommand.getHotelId());
