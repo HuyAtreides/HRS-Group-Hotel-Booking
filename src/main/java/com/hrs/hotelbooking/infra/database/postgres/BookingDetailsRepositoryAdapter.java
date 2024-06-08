@@ -1,15 +1,20 @@
 package com.hrs.hotelbooking.infra.database.postgres;
 
+import com.hrs.hotelbooking.application.Page;
 import com.hrs.hotelbooking.application.command.BookHotelCommand;
 import com.hrs.hotelbooking.application.command.BookRoomCommand;
 import com.hrs.hotelbooking.application.command.BookingModificationCommand;
+import com.hrs.hotelbooking.application.query.PageOptions;
 import com.hrs.hotelbooking.application.repository.BookingDetailsRepository;
 import com.hrs.hotelbooking.domain.model.BookingDetails;
+import com.hrs.hotelbooking.domain.model.Hotel;
+import com.hrs.hotelbooking.domain.model.User;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -48,6 +53,21 @@ public class BookingDetailsRepositoryAdapter implements BookingDetailsRepository
                 ).collect(Collectors.toSet())
 
         );
+    }
+
+    @Override
+    public Page<BookingDetails> findAllBookingDetailsOfUser(User user, PageOptions pageOptions) {
+        org.springframework.data.domain.Page<BookingDetails> bookingDetailsPage = bookingDetailsRepository.findByOwner(
+                user,
+                PageRequest.of(pageOptions.getPage(), pageOptions.getSize())
+        );
+
+        return Page.<BookingDetails>builder()
+                .totalElements(bookingDetailsPage.getNumberOfElements())
+                .totalPages(bookingDetailsPage.getTotalPages())
+                .isLast(bookingDetailsPage.isLast())
+                .content(bookingDetailsPage.getContent())
+                .build();
     }
 
     @Override
