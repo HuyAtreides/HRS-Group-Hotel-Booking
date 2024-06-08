@@ -19,6 +19,11 @@ public class BookingDetailsRepositoryAdapter implements BookingDetailsRepository
     private final SpringBookingDetailsRepository bookingDetailsRepository;
 
     @Override
+    public void delete(BookingDetails bookingDetails) {
+        bookingDetailsRepository.delete(bookingDetails);
+    }
+
+    @Override
     public Set<BookingDetails> findAllOverlappingBookings(BookHotelCommand bookHotelCommand) {
         return bookingDetailsRepository.findAllOverlappingBookings(
                 bookHotelCommand.getCheckInDate(),

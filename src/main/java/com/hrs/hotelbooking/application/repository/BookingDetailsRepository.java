@@ -15,4 +15,6 @@ public interface BookingDetailsRepository {
     BookingDetails save(BookingDetails bookingDetails);
 
     BookingDetails findById(UUID uuid);
+
+    void delete(BookingDetails bookingDetails);
 }

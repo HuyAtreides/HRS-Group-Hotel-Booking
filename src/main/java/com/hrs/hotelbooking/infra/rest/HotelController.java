@@ -4,6 +4,7 @@ import com.hrs.hotelbooking.application.HotelService;
 import com.hrs.hotelbooking.application.Page;
 import com.hrs.hotelbooking.application.command.BookHotelCommand;
 import com.hrs.hotelbooking.application.command.BookingModificationCommand;
+import com.hrs.hotelbooking.application.command.CancelBookingCommand;
 import com.hrs.hotelbooking.domain.model.BookingDetails;
 import com.hrs.hotelbooking.domain.model.Hotel;
 import com.hrs.hotelbooking.infra.dto.BookHotelCommandDto;
@@ -21,6 +22,7 @@ import com.hrs.hotelbooking.infra.mapper.SearchHotelQueryMapper;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,5 +82,17 @@ public class HotelController {
         bookingModificationCommand.setExistingBookingId(UUID.fromString(bookingId));
 
         hotelService.modifyBooking(bookingModificationCommand);
+    }
+
+    @DeleteMapping("/booking/{bookingId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelBooking(
+            @PathVariable String bookingId
+    ) {
+        hotelService.cancelBooking(
+                CancelBookingCommand.builder()
+                        .bookingDetailsId(UUID.fromString(bookingId))
+                        .build()
+        );
     }
 }
