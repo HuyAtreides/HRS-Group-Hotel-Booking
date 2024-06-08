@@ -1,9 +1,12 @@
 package com.hrs.hotelbooking.infra.database.postgres;
 
 import com.hrs.hotelbooking.domain.model.BookingDetails;
+import com.hrs.hotelbooking.domain.model.User;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -41,4 +44,6 @@ public interface SpringBookingDetailsRepository extends CrudRepository<BookingDe
             @Param("checkOutDate") LocalDate checkOutDate,
             @Param("roomIds") Set<UUID> roomIds
     );
+
+    Page<BookingDetails> findByOwner(User owner, Pageable pageable);
 }
