@@ -8,6 +8,7 @@
 #### Technical:
 1. All API endpoints, except the search endpoint, require authentication.
 2. Authentication uses a bearer token in the Authorization header. For simplicity, the user email is used as the bearer token, although it should be a JWT/JWE token.
+3. Currently, there is no dedicated database table for analytics. For simplicity, analytics can be derived from logs.
 ### Search hotel feature:
 - Implemented to search hotels by city only.
 ### Booking hotel feature:
