@@ -80,8 +80,9 @@ public class Hotel {
             for (BookedRoom bookedRoom : bookingDetails.getBookedRooms()) {
                 UUID bookedRoomId = bookedRoom.getRoom().getId();
                 int bookedRoomQuantity = bookedRoom.getQuantity();
+                boolean bookedRoomInBookingRooms = bookingRoomIdToAvailabilityMap.containsKey(bookedRoomId);
 
-                if (!bookingRoomIdToAvailabilityMap.containsKey(bookedRoomId)) {
+                if (!bookedRoomInBookingRooms) {
                     continue;
                 }
 
@@ -134,6 +135,11 @@ public class Hotel {
 
         validateBookingRoomsQuantity(existingBooking.getBookedRooms() , overlappingBooking);
         existingBooking.modify(bookingModificationRequest);
+    }
+
+    public void cancelBooking(CancelBookingRequest cancelBookingRequest) {
+        BookingDetails bookingDetails = cancelBookingRequest.getBookingDetails();
+        bookingDetails.validateIfEligibleForCancellation(cancelBookingRequest);
     }
 
     public BookingDetails book(BookingRequest request, Set<BookingDetails> overlappingBooking) {

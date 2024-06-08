@@ -22,6 +22,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 
 @Entity
 @Getter
@@ -54,7 +55,7 @@ public class BookingDetails {
     @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
-    @OneToMany(mappedBy = "bookingDetails", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "bookingDetails", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<BookedRoom> bookedRooms;
 
     @OneToOne
@@ -103,27 +104,46 @@ public class BookingDetails {
         return owner.equals(user);
     }
 
+    private void validateIfModifierIsOwner(User modifier) {
+        if (!this.isOwnedBy(modifier)) {
+            throw new InvalidBookingModification("Modifier is not the booking owner");
+        }
+    }
+
+    private void validateIfDaysBetweenModifiedDateAndBookedDateAcceptable(LocalDate modifiedDate) {
+        LocalDate bookedAtDate = LocalDate.ofInstant(bookedAt, ZoneOffset.UTC);
+
+        if (ChronoUnit.DAYS.between(bookedAtDate, modifiedDate) > 2) {
+            throw new InvalidBookingModification(
+                    "Can only modify within at most 2 days after booked date"
+            );
+        }
+    }
+
+    private void validateIfModifiedDateAfterCheckInDate(LocalDate modificationDate) {
+        if (modificationDate.isAfter(this.checkInDate) || modificationDate.equals(
+                this.checkInDate)) {
+            throw new InvalidBookingModification("Modification date can not be after or equal to check in date");
+        }
+    }
+
+    public void validateIfEligibleForCancellation(CancelBookingRequest request) {
+        User modifier = request.getModifier();
+        LocalDate cancelDate = LocalDate.ofInstant(request.getCancelAt(), ZoneOffset.UTC);
+
+        validateIfModifierIsOwner(modifier);
+        validateIfModifiedDateAfterCheckInDate(cancelDate);
+        validateIfDaysBetweenModifiedDateAndBookedDateAcceptable(cancelDate);
+    }
     public void validateIfEligibleForModification(BookingModificationRequest request) {
         User modifier = request.getModifier();
         LocalDate newCheckInDate = request.getNewCheckInDate();
         LocalDate newCheckOutDate = request.getNewCheckOutDate();
         LocalDate modificationDate = LocalDate.ofInstant(request.getModifiedAt(), ZoneOffset.UTC);
-        LocalDate bookedAtDate = LocalDate.ofInstant(bookedAt, ZoneOffset.UTC);
 
-        if (!this.isOwnedBy(modifier)) {
-            throw new InvalidBookingModification("Modifier is not the booking owner");
-        }
-
-        if (modificationDate.isAfter(this.checkInDate) || modificationDate.equals(
-                this.checkInDate)) {
-            throw new InvalidBookingModification("Modification can not be after check in date");
-        }
-
-        if (ChronoUnit.DAYS.between(bookedAtDate, modificationDate) > 2) {
-            throw new InvalidBookingModification(
-                    "Can only modify within at most 2 days after booked date"
-            );
-        }
+        validateIfModifierIsOwner(modifier);
+        validateIfModifiedDateAfterCheckInDate(modificationDate);
+        validateIfDaysBetweenModifiedDateAndBookedDateAcceptable(modificationDate);
 
         boolean stayingPeriodUnchanged =
                 newCheckInDate != null && newCheckInDate.equals(this.checkInDate) &&

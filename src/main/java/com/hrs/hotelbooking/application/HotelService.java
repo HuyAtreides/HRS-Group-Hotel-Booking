@@ -3,6 +3,7 @@ package com.hrs.hotelbooking.application;
 import com.hrs.hotelbooking.application.command.BookHotelCommand;
 import com.hrs.hotelbooking.application.command.BookRoomCommand;
 import com.hrs.hotelbooking.application.command.BookingModificationCommand;
+import com.hrs.hotelbooking.application.command.CancelBookingCommand;
 import com.hrs.hotelbooking.application.query.SearchHotelQuery;
 import com.hrs.hotelbooking.application.repository.BookingDetailsRepository;
 import com.hrs.hotelbooking.application.repository.HotelRepository;
@@ -11,6 +12,7 @@ import com.hrs.hotelbooking.domain.model.BookedRoom;
 import com.hrs.hotelbooking.domain.model.BookingDetails;
 import com.hrs.hotelbooking.domain.model.BookingModificationRequest;
 import com.hrs.hotelbooking.domain.model.BookingRequest;
+import com.hrs.hotelbooking.domain.model.CancelBookingRequest;
 import com.hrs.hotelbooking.domain.model.Hotel;
 import com.hrs.hotelbooking.domain.model.Room;
 import com.hrs.hotelbooking.domain.model.User;
@@ -101,5 +103,29 @@ public class HotelService {
         BookingDetails bookingDetails = hotel.book(bookingRequest, overlappingBookingDetails);
 
         return bookingDetailsRepository.save(bookingDetails);
+    }
+
+    @Transactional
+    public void cancelBooking(CancelBookingCommand cancelBookingCommand) {
+        User user = authenticatedUserHolderService.getAuthenticatedUser();
+        UUID bookingDetailsId = cancelBookingCommand.getBookingDetailsId();
+
+        log.info("message=cancel booking, method=cancelBooking, bookingId={}, user={}",
+                bookingDetailsId,
+                user.getEmail()
+        );
+
+        BookingDetails bookingDetails = bookingDetailsRepository.findById(bookingDetailsId);
+        Hotel hotel = bookingDetails.getHotel();
+
+        hotel.cancelBooking(
+                CancelBookingRequest.builder()
+                        .bookingDetails(bookingDetails)
+                        .modifier(user)
+                        .cancelAt(currentDateTimeService.getCurrentDateTime())
+                        .build()
+        );
+
+        bookingDetailsRepository.delete(bookingDetails);
     }
 }
