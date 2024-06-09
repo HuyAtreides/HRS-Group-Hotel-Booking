@@ -23,9 +23,9 @@ INSERT INTO "user" (
 	modified_at
 ) VALUES (
   '25d31a88-17ed-44cf-aee3-7701e0c4e5d4',
-	'Dinh',
-	'Nghia',
-	'Dinh.Nghia@hrs.com',
+	'Elliot',
+	'Alderson',
+	'Elliot.Alderson@mrrobot.com',
 	timezone('utc', now()),
 	timezone('utc', now())
 );
