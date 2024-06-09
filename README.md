@@ -44,7 +44,7 @@
     cd HRS-Group-Hotel-Booking
     ```
 2. Run `docker compose up`
-3. Access the API at http://localhost:8080. The API definition is available [here](https://www.postman.com/martian-meadow-963625/workspace/hrs-group-hotel-booking/api/3dbc78e0-7f0d-4d05-ae92-ce54b430aa90/definition/071b0c7e-6f2e-4cba-8f8d-a47f55ddefe5). Note: Postman agent may be required for testing the API locally with Postman.
+3. Access the API at http://localhost:8080. The API definition is available [here](https://www.postman.com/martian-meadow-963625/workspace/hrs-group-hotel-booking/api/3dbc78e0-7f0d-4d05-ae92-ce54b430aa90/definition/43dd5f74-8010-4c03-a822-ebb623268278?version=e7287f8c-7bd3-484b-87ec-c935e3d6932d). Note: Postman agent may be required for testing the API locally with Postman.
 
 
 
